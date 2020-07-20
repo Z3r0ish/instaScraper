@@ -2,11 +2,13 @@ from selenium import webdriver
 import time
 import urllib.request
 
-account = ["account1", "account2"]
+account = ["account1", "account2", "explore/tags/hashtag1", "explore/tags/hashtag2"]
+filepath = ' '
+
 i = 0
 
 # open chrome / open 
-driver = webdriver.Chrome('')
+driver = webdriver.Chrome(' ')
 
 for a in account:
     print(account)
@@ -39,10 +41,10 @@ for a in account:
         type = driver.find_element_by_xpath('//meta[@property="og:type"]').get_attribute('content')
         if type == 'video':
             download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
-            urllib.request.urlretrieve(download_url, "{}.mp4".format(shortcode))
+            urllib.request.urlretrieve(download_url, filepath +"{}.mp4".format(shortcode))
         else:
             download_url = driver.find_element_by_xpath('//meta[@property="og:image"]').get_attribute('content')
-            urllib.request.urlretrieve(download_url, "{}.jpg".format(shortcode))
+            urllib.request.urlretrieve(download_url, filepath +"{}.jpg".format(shortcode))
         
         print(type + ' ' + download_url)
     i += 1
