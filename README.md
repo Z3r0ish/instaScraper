@@ -8,9 +8,11 @@ An Instagram Scraper made in python
 * [selenium (pip install selenium)](https://pypi.org/project/selenium/ "selenium (pip install selenium)")
 
 ## How to use
-1. Change line to the location of your Chrome WebDriver
+1. Change line 11 to point to the location of your Chrome WebDriver
 2. Put the accounts / hastags you want to scrape in the array on line 5
     * for hastags your have to put explore/tags/'your hastag'
-3. Run it by doing ``python instaScraper.py``
+3. Put the filepath you want to save the files on line 6
+    * examples: ``/hdd/media/`` or ``D://media/``
+4. Run it by doing ``python instaScraper.py``
 
 ### [WTFPL – Do What the Fuck You Want to Public License](http://www.wtfpl.net/ " WTFPL – Do What the Fuck You Want to Public License")
