@@ -9,7 +9,7 @@ print(accounts)
 i = 0
 
 # open chrome / open 
-driver = webdriver.Chrome("D:\\ethan\\chromedriver.exe")
+driver = webdriver.Chrome(" ")
 
 for account in accounts:
     
