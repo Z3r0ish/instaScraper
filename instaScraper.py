@@ -26,7 +26,7 @@ for account in accounts:
     scroll=0
     while(match==False):
         lastCount = lenOfPage
-        time.sleep(.5)
+        time.sleep(5)
         lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
         if lastCount==lenOfPage:
             match=True
