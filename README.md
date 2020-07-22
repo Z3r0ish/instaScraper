@@ -2,7 +2,7 @@
 An Instagram Scraper made in python
 
 # Requirements
-* A *nix based OS (I'm using Arch linux)
+* A Unix based OS (I'm using Arch linux)
 * [Chrome / chromium based browser (I hate it too)](https://www.google.com/chrome/ "Chrome / chromium based browser (I hate it too)")
 * [Chrome WebDriver (needs to match chrome version see chrome://verson)](https://sites.google.com/a/chromium.org/chromedriver/ "Chrome WebDriver (needs to match chrome version see chrome://verson)")
 * [Python and pip](https://www.python.org/downloads/ "Python and pip")
