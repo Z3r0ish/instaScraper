@@ -2,14 +2,14 @@ from selenium import webdriver
 import time
 import urllib.request
 
-accounts = ["acount1", "account2"]
-filepath = "/insta/media/"
+from config import *
+
 print(accounts)
 
 i = 0
 
 # open chrome / open 
-driver = webdriver.Chrome("chromedriver")
+driver = webdriver.Chrome(driver)
 
 for account in accounts:
     
@@ -26,7 +26,7 @@ for account in accounts:
     scroll=0
     while(match==False):
         lastCount = lenOfPage
-        time.sleep(.5)
+        time.sleep(scrollTime)
         lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
         if lastCount==lenOfPage:
             match=True

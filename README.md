@@ -9,11 +9,12 @@ An Instagram Scraper made in python
 * [selenium (pip install selenium)](https://pypi.org/project/selenium/ "selenium (pip install selenium)")
 
 ## How to use
-1. Change line 12 to point to the location of your Chrome WebDriver (if you installed the chrome webdriver as a package just put chromedriver)
-2. Put the accounts / hastags you want to scrape in the array on line 5
+1. Put the accounts / hastags you wacnt to scrape in the array on line 1 of config.py
     * for hastags your have to put explore/tags/'your hastag'
-3. Put the filepath you want to save the files on line 6
+2. Change line 3 of config.py to point to the loation of your Chrome WebDriver (if you installed the chrome webdriver as a package just put chromedriver)
+3. Put the filepath you want to save the files on line 3 of config.py
     * examples: ``/hdd/media/`` or ``/instagram/``
-4. Run it by doing ``python instaScraper.py``
+4. Change the time between scrolls (in seconds) on line 4 of config.py (I found 5 seconds to be the best)
+5. Run it by doing ``python instaScraper.py``
 
 ### [WTFPL – Do What the Fuck You Want to Public License](http://www.wtfpl.net/ " WTFPL – Do What the Fuck You Want to Public License")
