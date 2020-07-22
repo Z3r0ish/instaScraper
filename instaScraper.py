@@ -2,14 +2,14 @@ from selenium import webdriver
 import time
 import urllib.request
 
-account = ["account1", "account2", "explore/tags/hashtag1", "explore/tags/hashtag2"]
-filepath = " "
+accounts = ["acount1", "account2"]
+filepath = "/insta/media/"
 print(accounts)
 
 i = 0
 
 # open chrome / open 
-driver = webdriver.Chrome(" ")
+driver = webdriver.Chrome("chromedriver")
 
 for account in accounts:
     
@@ -26,7 +26,7 @@ for account in accounts:
     scroll=0
     while(match==False):
         lastCount = lenOfPage
-        time.sleep(5)
+        time.sleep(.5)
         lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
         if lastCount==lenOfPage:
             match=True
@@ -48,24 +48,41 @@ for account in accounts:
     # spliting up the url, finding out if it's an image or video and downloading it
     download_url = ' '
     for post in posts:
-        driver.get(post) #loads in the post
+        driver.get(post) # loads in the post
         shortcode = driver.current_url.split('/')[-2] # gets the url code
 
-        # gets the numbers of likes
-        likes = driver.find_element_by_xpath("""//*[@id="react-root"]/section/main/div/div/article/div[3]/section[2]/div/div/button""").text
-        print(likes)
-        likesSplit = likes.split(' ')
-
+        # get the time it was created
+        datetime = driver.find_element_by_xpath("""//*[@id="react-root"]/section/main/div/div/article/div[3]/div[2]/a/time""").get_attribute('datetime')
+        print(datetime)
+        
         # find out if it's a video or immage
         type = driver.find_element_by_xpath('//meta[@property="og:type"]').get_attribute('content')
 
-        #d downloads it
+        # create file name
+        name = [filepath, accounts[i], '&', followers, '&', datetime]
+        nameJoined = ''.join(name)
+        
+        # gets the numbers of likes
+        try:
+            likes = driver.find_element_by_xpath("""//*[@id="react-root"]/section/main/div/div/article/div[3]/section[2]/div/div/button""").text
+            print(likes)
+            likesSplit = likes.split(' ')
+        # if it couldn't get the likes
+        except:
+            likesSplit = ['null', 'null'] 
+            print('Could not get the likes')
+
+        # downloads it
         if type == 'video':
             download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
-            urllib.request.urlretrieve(download_url, filepath + accounts[i] + '&' + followers + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
+            urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
         else:
             download_url = driver.find_element_by_xpath('//meta[@property="og:image"]').get_attribute('content')
-            urllib.request.urlretrieve(download_url, filepath + accounts[i] + '&' + followers + '&' + likesSplit[0] + '&' + "{}.jpg".format(shortcode))
+            urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.jpg".format(shortcode))
         
         print(type + ' ' + download_url)
     i += 1
+
+driver.quit()
+
+print('instaScraper has finished')
