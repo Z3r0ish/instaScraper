@@ -1,12 +1,13 @@
 from selenium import webdriver
 import time
 import urllib.request
-
 from config import *
 
 print(accounts)
 
 i = 0
+numberPost = 0
+null = 0
 
 # open chrome / open 
 driver = webdriver.Chrome(driver)
@@ -71,18 +72,22 @@ for account in accounts:
         except:
             likesSplit = ['null', 'null'] 
             print('Could not get the likes')
+            null += 1
 
         # downloads it
-        if type == 'video':
-            download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
-            urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
-        else:
-            download_url = driver.find_element_by_xpath('//meta[@property="og:image"]').get_attribute('content')
-            urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.jpg".format(shortcode))
-        
+        if likesSplit[0] != 'null':
+            if type == 'video':
+                download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
+                urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
+            else:
+                download_url = driver.find_element_by_xpath('//meta[@property="og:image"]').get_attribute('content')
+                urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.jpg".format(shortcode))
         print(type + ' ' + download_url)
+        numberPost += 1
     i += 1
 
 driver.quit()
 
 print('instaScraper has finished')
+print(str(numberPost) + ' post where scraped')
+print(str(null) + ' have no likes')
