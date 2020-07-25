@@ -91,11 +91,12 @@ try:
             numberPost += 1
         i += 1
 
-    driver.quit()
-
     print('instaScraper has finished')
     print(str(numberPost) + ' post where scraped')
     print(str(null) + ' have no likes')
 
 except:
     print('There was a problem while trying to run the script')
+  
+finally:
+    driver.quit()
