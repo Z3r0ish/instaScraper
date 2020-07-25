@@ -10,7 +10,12 @@ numberPost = 0
 null = 0
 
 # open chrome / open 
-driver = webdriver.Chrome(driver)
+options = webdriver.ChromeOptions()
+options.add_argument('--headless')
+options.add_argument('window-size=1920x1080')
+
+driver = webdriver.Chrome(executable_path=driver,   chrome_options=options)
+
 try:
     for account in accounts:
         
