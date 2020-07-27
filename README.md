@@ -9,8 +9,7 @@ An Instagram Scraper made in python
 * [selenium (pip install selenium)](https://pypi.org/project/selenium/ "selenium (pip install selenium)")
 
 ## How to use
-1. Put the accounts / hastags you wacnt to scrape in the array on line 1 of config.py
-    * for hastags your have to put explore/tags/'your hastag'
+1. Put the discord bot token on line 1 of config.py
 2. Change line 3 of config.py to point to the loation of your Chrome WebDriver (if you installed the chrome webdriver as a package just put chromedriver)
 3. Put the filepath you want to save the files on line 3 of config.py
     * examples: ``/hdd/media/`` or ``/instagram/``
