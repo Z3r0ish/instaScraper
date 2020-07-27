@@ -116,7 +116,7 @@ async def scrape(ctx, *args):
                     if type == 'instapp:photo':
                         download_url = driver.find_element_by_xpath('//meta[@property="og:image"]').get_attribute('content')
                         urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.jpg".format(shortcode))
-                    elif type == 'video':
+                    else:
                         download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
                         urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
                 print(type + ' ' + download_url)
