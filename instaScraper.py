@@ -4,17 +4,78 @@ import discord
 from discord.ext import commands
 from config import *
 import time
+import json
 
 # log into the client
 client = discord.Client()
 
+#
+# functions to parse the json file, I'm not going to comment all of them
+#
+
+def getPrefix(client, message):
+    with open(jsonPath, 'r') as f:
+        prefixes = json.load(f)
+    return prefixes[str(message.guild.id)]
+
+def getPath():
+    with open(jsonPath, 'r') as f:
+        path = json.load(f)
+    return path['path']
+
+def getScrollTime():
+    with open(jsonPath, 'r') as f:
+        scrollTime = json.load(f)
+    return int(scrollTime['scrollTime'])
+
+def getDriverPath():
+    with open(jsonPath, 'r') as f:
+        driverPath = json.load(f)
+    return driverPath['driverPath']
+
 # sets the prefix
-client = commands.Bot(command_prefix=prefix)
+client = commands.Bot(command_prefix=getPrefix)
 
 # when the bot is logged in print it in the terminal
 @client.event
 async def on_ready():
     print('Logged in as {0.user}'.format(client))
+
+# make the path command
+@client.command()
+async def path(ctx, newPath):
+    with open(jsonPath, 'r') as f:
+        path = json.load(f)
+    
+    path[str("path")] = newPath
+
+    with open(jsonPath, 'w') as f:
+        json.dump(path, f, indent=4)
+    await ctx.send('Set filepath to ' + newPath)
+
+# make the scrollTime command
+@client.command()
+async def scrolltime(ctx, newScrollTime):
+    with open(jsonPath, 'r') as f:
+        scrollTime = json.load(f)
+    
+    scrollTime[str("scrollTime")] = int(newScrollTime)
+
+    with open(jsonPath, 'w') as f:
+        json.dump(scrollTime, f, indent=4)
+    await ctx.send('Set scroll time to ' + newScrollTime)
+    
+# make the driverPath command
+@client.command()
+async def driverpath(ctx, newDriverPath):
+    with open(jsonPath, 'r') as f:
+        driverPath = json.load(f)
+    
+    driverPath[str("driverPath")] = newDriverPath
+
+    with open(jsonPath, 'w') as f:
+        json.dump(driverPath, f, indent=4)
+    await ctx.send('The driver path has been set to ' + newDriverPath)
 
 # make the scrape command
 @client.command()
@@ -27,7 +88,7 @@ async def scrape(ctx, *args):
     elif len(args) < 1:
         await ctx.send('Not engough accounts')
         return
-    
+
     i = 0
     numberPost = 0
     null = 0
@@ -41,7 +102,7 @@ async def scrape(ctx, *args):
     options.add_argument('window-size=1920x1080')
 
     # opens chrome
-    driver = webdriver.Chrome(executable_path=driverPath,   chrome_options=options)
+    driver = webdriver.Chrome(executable_path=getDriverPath(),   chrome_options=options)
 
     try:
         for acc in accounts:
@@ -53,10 +114,12 @@ async def scrape(ctx, *args):
             # gets the follower count
             try:
                 followers = driver.find_element_by_xpath(followerXpath).text
-                print(followers)
+                print(account + " has " + followers)
+                await ctx.send(account + " has " + followers + " followers")
             except:
                 followers = 'null'
                 print("wasn't able to get followers")
+                await ctx.send("wasn't able to get followers")
 
             # scrolling (does a max of 4 page heights)
             lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
@@ -64,7 +127,7 @@ async def scrape(ctx, *args):
             scroll=0
             while(match==False):
                 lastCount = lenOfPage
-                time.sleep(scrollTime)
+                time.sleep(getScrollTime())
                 lenOfPage = driver.execute_script("window.scrollTo(0, document.body.scrollHeight);var lenOfPage=document.body.scrollHeight;return lenOfPage;")
                 if lastCount==lenOfPage:
                     match=True
@@ -97,7 +160,7 @@ async def scrape(ctx, *args):
                 type = driver.find_element_by_xpath(connentXpath).get_attribute('content')
                 print(type)
                 # create file name
-                name = [filepath, accounts[i], '&', followers, '&', datetime]
+                name = [getPath(), accounts[i], '&', followers, '&', datetime]
                 nameJoined = ''.join(name)
                 
                 # gets the numbers of likes
@@ -112,15 +175,14 @@ async def scrape(ctx, *args):
                     null += 1
 
                 # downloads it
-                if likesSplit[0] != 'null':
-                    if type == 'instapp:photo':
-                        download_url = driver.find_element_by_xpath('//meta[@property="og:image"]').get_attribute('content')
-                        urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.jpg".format(shortcode))
-                    else:
-                        download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
-                        urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
-                print(type + ' ' + download_url)
-                numberPost += 1
+                if type == 'instapp:photo':
+                    download_url = driver.find_element_by_xpath('//meta[@property="og:image"]').get_attribute('content')
+                    urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.jpg".format(shortcode))
+                else:
+                    download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
+                    urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
+            print(type + ' ' + download_url)
+            numberPost += 1
             i += 1
 
         print('instaScraper has finished')
