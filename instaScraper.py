@@ -5,6 +5,7 @@ from discord.ext import commands
 from config import *
 import time
 import json
+import os
 
 # log into the client
 client = discord.Client()
@@ -98,11 +99,11 @@ async def scrape(ctx, *args):
 
     # sets the options for chrome
     options = webdriver.ChromeOptions()
-    options.add_argument('--headless')
+    # options.add_argument('--headless')
     options.add_argument('window-size=1920x1080')
 
     # opens chrome
-    driver = webdriver.Chrome(executable_path=getDriverPath(),   chrome_options=options)
+    driver = webdriver.Chrome(executable_path=getDriverPath(),   options=options)
 
     try:
         for acc in accounts:
@@ -151,14 +152,13 @@ async def scrape(ctx, *args):
             for post in posts:
                 driver.get(post) # loads in the post
                 shortcode = driver.current_url.split('/')[-2] # gets the url code
+                type = driver.find_element_by_xpath('//meta[@property="og:type"]').get_attribute('content')
 
                 # get the time it was created
                 datetime = driver.find_element_by_xpath(timeXpath).get_attribute('datetime')
                 print(datetime)
-                
-                # find out if it's a video or immage
-                type = driver.find_element_by_xpath(connentXpath).get_attribute('content')
-                print(type)
+                urllib.request.urlretrieve
+
                 # create file name
                 name = [getPath(), accounts[i], '&', followers, '&', datetime]
                 nameJoined = ''.join(name)
@@ -166,13 +166,12 @@ async def scrape(ctx, *args):
                 # gets the numbers of likes
                 try:
                     likes = driver.find_element_by_xpath(likesXpath).text
-                    print(likes)
+                    print(str(likes))
                     likesSplit = likes.split(' ')
                 # if it couldn't get the likes
                 except:
-                    likesSplit = ['null', 'null'] 
+                    likesSplit = [0, 0] 
                     print('Could not get the likes')
-                    null += 1
 
                 # downloads it
                 if type == 'instapp:photo':
@@ -181,19 +180,18 @@ async def scrape(ctx, *args):
                 else:
                     download_url = driver.find_element_by_xpath('//meta[@property="og:video"]').get_attribute('content')
                     urllib.request.urlretrieve(download_url, nameJoined + '&' + likesSplit[0] + '&' + "{}.mp4".format(shortcode))
-            print(type + ' ' + download_url)
-            numberPost += 1
+                print(type + ' ' + download_url)
+                numberPost += 1
             i += 1
 
         print('instaScraper has finished')
         print(str(numberPost) + ' post where scraped')
-        print(str(null) + ' have no likes')
 
         # makes the embed
         embed=discord.Embed(title="instaScraper has finished")
         embed.add_field(name="Accounts", value=' '.join(accounts), inline=False)
         embed.add_field(name="Scraped post", value=str(numberPost), inline=True)
-        embed.add_field(name="Post with no likes", value=str(null), inline=True)
+        #embed.add_field(name="Post with no likes", value=str("n/a"), inline=True)
         
         # sends the embed
         await ctx.send(embed=embed)

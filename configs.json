@@ -1,5 +1,10 @@
 {
-    "path": "/hdd/media/",
-    "scrollTime": 5,
-    "driverPath": "chromedriver"
+    "737175982837858304": "!",
+    "path": "/home/victor/instaScraper/test/",
+    "scrollTime": 1,
+    "driverPath": "chromedriver",
+    "path-whatifimabot": "/home/victor/instaScraper/test/",
+    "minAge-whatifimabot": 0,
+    "minEngagementRate-whatifimabot": 0,
+    "timeout-whatifimabot": "60"
 }
